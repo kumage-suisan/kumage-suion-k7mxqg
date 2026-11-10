@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>熊毛地区水産振興会_水温図等提供画面（試作）</title>
+<style>
+body{margin:0;font-family:"Meiryo","Yu Gothic","Hiragino Sans",sans-serif;background:#f4f6f8;color:#1b2430;font-size:17px;line-height:1.6}
+header{background:#0b3d5c;color:#fff;padding:12px 16px}
+header h1{font-size:20px;margin:0;overflow-wrap:anywhere}
+header p{margin:2px 0 0;font-size:14px;opacity:.85}
+main{max-width:900px;margin:0 auto;padding:8px 16px 32px}
+.bar{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.bar button{font-size:16px;padding:8px 12px;border:1px solid #9fb3c4;background:#fff;border-radius:6px;color:#1b2430;cursor:pointer}
+.bar button.on{background:#0b3d5c;color:#fff;border-color:#0b3d5c}
+a.ext{display:inline-block;font-size:16px;padding:8px 12px;border:1px solid #0b3d5c;border-radius:6px;color:#0b3d5c;background:#e8f1f7;text-decoration:none}
+button.home{background:#f4f6f8!important;color:#0b3d5c!important;border-style:dashed!important}
+.info,.card{background:#fff;border:1px solid #d5dde5;border-radius:8px;padding:10px 12px;margin:8px 0}
+.card h2{font-size:19px;margin:0 0 4px}
+.card h3{font-size:16px;margin:10px 0 2px}
+.card p{margin:4px 0}
+.card ul{margin:4px 0;padding-left:1.3em}
+.bar button.big{font-size:18px;padding:12px 20px;border:0;border-radius:6px;background:#0b3d5c;color:#fff;cursor:pointer}
+.card button.go{font-size:17px;padding:10px 16px;margin-top:8px;border:0;border-radius:6px;background:#0b3d5c;color:#fff;cursor:pointer}
+.when{font-size:20px;font-weight:bold}
+.warn{background:#fff3cd;border:1px solid #e0b400;border-radius:8px;padding:10px 12px;margin:8px 0;font-weight:bold}
+figure{margin:8px 0}
+figure img{width:100%;height:auto;display:block;background:#fff;border:1px solid #d5dde5}
+.missing{padding:40px 12px;text-align:center;background:#fff;border:1px dashed #9fb3c4}
+footer{font-size:14px;color:#4a5866;border-top:1px solid #d5dde5;margin-top:24px;padding-top:8px}
+footer p:empty{display:none}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header><h1>熊毛地区水産振興会_水温図等提供画面（試作）</h1><p>ページ更新：2026年11月10日 15:22（日本時間）</p></header>
+<main>
+<section id="home">
+<div class="bar" id="homebtns"></div>
+<p>見たい図のボタンを押してください。図の画面の一番上の「はじめの画面」で、いつでもここへ戻れます。下に、それぞれの図の説明があります。</p>
+<div id="cards"></div>
+<p><a class="ext" id="homelink" target="_blank" rel="noopener"></a></p>
+</section>
+<section id="view" hidden>
+<div class="bar" id="srcs"></div>
+<div class="bar" id="prods"></div>
+<div class="info" id="empty" hidden>準備中です。</div>
+<div id="body">
+<div class="bar" id="rngs"></div>
+<div class="bar" id="kinds"></div>
+<div id="warn"></div>
+<div class="info"><div class="when" id="when"></div></div>
+<figure id="fig"></figure>
+</div>
+<footer>
+<p id="kindtxt"></p><p id="note"></p><p id="kindnote"></p><p id="graphnote"></p>
+<p id="credit"></p>
+</footer>
+</section>
+</main>
+<script>
+const D = {"sources": [{"label": "ひまわり", "about": ["気象衛星ひまわりで測った海面の水温です。", "雲の下は測れないので、空白になります。", "浮魚礁の実測より低めに出ることがあります（特に冬から春）。そのため、浮魚礁に合わせた補正版も載せています。"], "credit": "本画像作成の入力に使用したひまわり8号海面水温は、宇宙航空研究開発機構（ＪＡＸＡ）の分野横断型プロダクト提供サービス(P-Tree)より提供を受けました。", "products": [{"title": "1日合成（補正版）", "about": "1日合成に、その日の浮魚礁の実測との差を平均して一律に足したものです。", "ready": true, "kind_text": "データ：ひまわり 1日合成（昼夜込み、補正版）", "note": "その日の浮魚礁（下甑島西沖3・黒島沖3）の実測との差を平均して、図全体に一律に足したものです。実測の無い日は補正していません（図のタイトルに書いてあります）。雲で見えない所は水温が出ません。", "kinds": [{"key": "suion", "label": "水温"}, {"key": "bw", "label": "白黒"}, {"key": "color", "label": "色だけ"}, {"key": "shiome", "label": "潮目"}, {"key": "both", "label": "複合"}, {"key": "cold", "label": "冷水"}], "ranges": [{"label": "沿岸", "when": "対象日：2026年11月9日", "warn": "", "images": {"suion": "img/hh/box3_suion.png?v=1794287794", "bw": "img/hh/box3_bw.png?v=1794287794", "color": "img/hh/box3_color.png?v=1794287794", "shiome": "img/hh/box3_shiome.png?v=1794287794", "both": "img/hh/box3_both.png?v=1794287794", "cold": "img/hh/box3_cold.png?v=1794287794"}, "graph": "下のグラフは、鹿児島県水産技術開発センターのホームページより黒島沖3および下甑3浮魚礁の値を取得して作成しています。実線が浮魚礁で計測した水温、点線がひまわりで計測した水温です。"}, {"label": "広域", "when": "対象日：2026年11月9日", "warn": "", "images": {"suion": "img/hh/kouiki_suion.png?v=1794287794", "bw": "img/hh/kouiki_bw.png?v=1794287794", "color": "img/hh/kouiki_color.png?v=1794287794", "shiome": "img/hh/kouiki_shiome.png?v=1794287794", "both": "img/hh/kouiki_both.png?v=1794287794", "cold": "img/hh/kouiki_cold.png?v=1794287794"}, "graph": ""}]}, {"title": "1日合成", "about": "一日分の観測を重ねた図です。雲の穴が少なくなります。前日の分が翌日以降に出ます。", "ready": true, "kind_text": "データ：ひまわり 1日合成（昼夜込み、補正なし）", "note": "一日分を重ねたので、1時間合成より雲の穴が少なくなります。雲で見えない所は水温が出ません。", "kinds": [{"key": "suion", "label": "水温"}, {"key": "bw", "label": "白黒"}, {"key": "color", "label": "色だけ"}, {"key": "shiome", "label": "潮目"}, {"key": "both", "label": "複合"}, {"key": "cold", "label": "冷水"}], "ranges": [{"label": "沿岸", "when": "対象日：2026年11月9日", "warn": "", "images": {"suion": "img/hd/box3_suion.png?v=1794287775", "bw": "img/hd/box3_bw.png?v=1794287775", "color": "img/hd/box3_color.png?v=1794287775", "shiome": "img/hd/box3_shiome.png?v=1794287775", "both": "img/hd/box3_both.png?v=1794287775", "cold": "img/hd/box3_cold.png?v=1794287775"}, "graph": "下のグラフは、鹿児島県水産技術開発センターのホームページより黒島沖3および下甑3浮魚礁の値を取得して作成しています。実線が浮魚礁で計測した水温、点線がひまわりで計測した水温です。"}, {"label": "広域", "when": "対象日：2026年11月9日", "warn": "", "images": {"suion": "img/hd/kouiki_suion.png?v=1794287775", "bw": "img/hd/kouiki_bw.png?v=1794287775", "color": "img/hd/kouiki_color.png?v=1794287775", "shiome": "img/hd/kouiki_shiome.png?v=1794287775", "both": "img/hd/kouiki_both.png?v=1794287775", "cold": "img/hd/kouiki_cold.png?v=1794287775"}, "graph": ""}]}, {"title": "1時間合成（補正版）", "about": "1時間合成に、その時刻にいちばん近い9時の浮魚礁の実測との差を平均して一律に足したものです。", "ready": true, "kind_text": "データ：ひまわり 1時間合成（補正版）", "note": "その時刻の前後24時間でいちばん近い9時の浮魚礁（下甑島西沖3・黒島沖3）の実測との差を平均して、図全体に一律に足したものです。実測の無いときは補正していません（図のタイトルに書いてあります）。雲で見えない所は水温が出ません。雲が多い時刻（取得率10%未満）は図を作らないので、曇りが続くと古い時刻の図のまま残ります。", "kinds": [{"key": "suion", "label": "水温"}], "ranges": [{"label": "沿岸", "when": "2026年11月10日 13時（日本時間）の図", "warn": "", "images": {"suion": "img/h1h/box3_suion.png?v=1794291755"}, "graph": "下のグラフは、鹿児島県水産技術開発センターのホームページより黒島沖3および下甑3浮魚礁の値を取得して作成しています。実線が浮魚礁で計測した水温、点線又は点がひまわりで計測した水温です。"}, {"label": "広域", "when": "2026年11月10日 13時（日本時間）の図", "warn": "", "images": {"suion": "img/h1h/kouiki_suion.png?v=1794291755"}, "graph": ""}]}, {"title": "1時間合成", "about": "1時間ごとの図です。その時刻の海が見られますが、雲の穴は多くなります。1時間あまり遅れて出ます。", "ready": true, "kind_text": "データ：ひまわり 1時間合成（補正なし）", "note": "雲で見えない所は水温が出ません。雲が多い時刻（取得率10%未満）は図を作らないので、曇りが続くと古い時刻の図のまま残ります。", "kinds": [{"key": "suion", "label": "水温"}], "ranges": [{"label": "沿岸", "when": "2026年11月10日 13時（日本時間）の図", "warn": "", "images": {"suion": "img/h1/box3_suion.png?v=1794291748"}, "graph": "下のグラフは、鹿児島県水産技術開発センターのホームページより黒島沖3および下甑3浮魚礁の値を取得して作成しています。実線が浮魚礁で計測した水温、点線又は点がひまわりで計測した水温です。"}, {"label": "広域", "when": "2026年11月10日 13時（日本時間）の図", "warn": "", "images": {"suion": "img/h1/kouiki_suion.png?v=1794291748"}, "graph": ""}]}], "kinds": [{"key": "suion", "label": "水温", "note": "色と等温線で水温を表した図です。"}, {"key": "bw", "label": "白黒", "note": "色を使わない図です。"}, {"key": "color", "label": "色だけ", "note": "色のみで水温を表した図です。"}, {"key": "shiome", "label": "潮目", "note": "水温差が大きい所（潮目候補）を示した図です。"}, {"key": "both", "label": "複合", "note": "潮目候補図と水温図を合わせたものです。"}, {"key": "cold", "label": "冷水", "note": "周りと比べて水温が低くなっているところに印をつけています。"}]}, {"label": "MUR", "about": ["アメリカ航空宇宙局（NASA）のジェット推進研究所（JPL）が作っている海面水温（MUR）です。いくつもの衛星と船・ブイの観測を合わせ、雲の下も周りから推定して埋めているので、欠けがありません。日中に表面だけが温まる分は除いた水温です。", "対象日の翌日の19時ごろに出るので、夜までは前々日、夜からは前日の図になります。10日より短い細かい変化は、ならされて小さめに出ます。", "出たばかりの「速報版」は4〜5日後に「確定版」に置き換わります。どちらかは図の見出しに書いています。"], "credit": "水温（MUR）：JPL MUR MEaSUREs Project. 2015. GHRSST Level 4 MUR Global Foundation Sea Surface Temperature Analysis. Ver. 4.1. PO.DAAC, CA, USA. Dataset accessed 2026-11-10 at https://doi.org/10.5067/GHGMR-4FJ04", "products": [{"title": "MUR", "about": "1日1枚の図です。速報版は4〜5日後に確定版に置き換わり、図も自動で描き直されます。", "ready": false, "kind_text": "", "note": "", "kinds": [], "ranges": []}], "kinds": [{"key": "suion", "label": "水温", "note": "色と等温線で水温を表した図です。"}, {"key": "bw", "label": "白黒", "note": "色を使わない図です。"}, {"key": "color", "label": "色だけ", "note": "色のみで水温を表した図です。"}, {"key": "shiome", "label": "潮目", "note": "水温差が大きい所（潮目候補）を示した図です。"}, {"key": "both", "label": "複合", "note": "潮目候補図と水温図を合わせたものです。"}, {"key": "cold", "label": "冷水", "note": "周りと比べて水温が低くなっているところに印をつけています。"}]}], "shiome": "水温差が大きい箇所を潮目候補として記載しています。これが線状につながっている箇所を参考にしてください。点が分散している箇所は雲等でデータがつながらない箇所なので、参考にしないでください。", "suigi_name": "鹿児島県水産技術開発センターのホームページ", "suigi_url": "https://kagoshima.suigi.jp/", "suigi_btn": "水産技術開発センター"};
+let a = 0, p = 0, r = 0, k = 0;
+const $ = id => document.getElementById(id);
+function btns(id, items, cur, fn) {
+  const el = $(id); el.innerHTML = "";
+  items.forEach((t, i) => {
+    const b = document.createElement("button"); b.textContent = t;
+    if (i === cur) b.className = "on";
+    b.onclick = () => fn(i); el.appendChild(b);
+  });
+  return el;
+}
+function ext() {
+  const l = document.createElement("a"); l.className = "ext"; l.href = D.suigi_url;
+  l.target = "_blank"; l.rel = "noopener"; l.textContent = D.suigi_btn; return l;
+}
+function add(el, tag, text) { const e = document.createElement(tag); e.textContent = text; el.appendChild(e); return e; }
+function home() {
+  $("home").hidden = false; $("view").hidden = true;
+  const hb = $("homebtns"); hb.innerHTML = "";
+  D.sources.forEach((s, i) => {
+    const b = add(hb, "button", s.label + "水温図"); b.className = "big";
+    b.onclick = () => { a = i; p = 0; view(); window.scrollTo(0, 0); };
+  });
+  const c = $("cards"); c.innerHTML = "";
+  D.sources.forEach((s, i) => {
+    const d = document.createElement("div"); d.className = "card";
+    add(d, "h2", s.label);
+    s.about.forEach(t => add(d, "p", t));
+    if (s.products.length) {
+      add(d, "h3", "図の作り方");
+      const u = add(d, "ul", "");
+      s.products.forEach(x => add(u, "li", x.title + (x.ready ? "" : "（準備中）") + "：" + x.about));
+      add(d, "h3", "図の種類");
+      const v = add(d, "ul", "");
+      s.kinds.forEach(x => add(v, "li", x.note ? x.label + "：" + x.note : x.label));
+      add(d, "p", "沿岸の図には、下に浮魚礁の水温のグラフが付きます。");
+    } else {
+      add(d, "p", "準備中です。");
+    }
+    c.appendChild(d);
+  });
+  $("homelink").href = D.suigi_url; $("homelink").textContent = D.suigi_name;
+}
+function view() {
+  $("home").hidden = true; $("view").hidden = false;
+  const src = D.sources[a];
+  const sb = btns("srcs", src ? D.sources.map(x => x.label) : [], a, i => { a = i; p = 0; view(); });
+  const hb = document.createElement("button"); hb.textContent = "はじめの画面"; hb.className = "home";
+  hb.onclick = () => { home(); window.scrollTo(0, 0); }; sb.insertBefore(hb, sb.firstChild);
+  btns("prods", src.products.map(x => x.title), p, i => { p = i; view(); });
+  const prod = src.products[p] && src.products[p].ready ? src.products[p] : null;
+  $("empty").hidden = !!prod; $("body").hidden = !prod;
+  ["kindtxt", "note", "kindnote", "graphnote"].forEach(id => { $(id).textContent = ""; });
+  $("credit").textContent = src.credit;
+  if (!prod) return;
+  if (k >= prod.kinds.length) k = 0;
+  const rg = prod.ranges[r];
+  btns("rngs", prod.ranges.map(x => x.label), r, i => { r = i; view(); });
+  btns("kinds", prod.kinds.map(x => x.label), k, i => { k = i; view(); }).appendChild(ext());
+  $("when").textContent = rg.when;
+  $("kindtxt").textContent = prod.kind_text;
+  $("note").textContent = prod.note;
+  $("kindnote").textContent = prod.kinds[k].key === "shiome" ? D.shiome : "";
+  const g = $("graphnote");
+  if (rg.graph) {
+    const n = D.suigi_name, at = rg.graph.indexOf(n);
+    if (at < 0) g.textContent = rg.graph;
+    else {
+      const l = document.createElement("a"); l.href = D.suigi_url; l.textContent = n;
+      l.target = "_blank"; l.rel = "noopener";
+      g.append(rg.graph.slice(0, at), l, rg.graph.slice(at + n.length));
+    }
+  }
+  const w = $("warn"); w.innerHTML = "";
+  if (rg.warn) { const d = document.createElement("div"); d.className = "warn"; d.textContent = rg.warn; w.appendChild(d); }
+  const im = prod.ranges[r].images[prod.kinds[k].key];
+  $("fig").innerHTML = im ? '<img src="' + im + '" alt="">' : '<div class="missing">この図は今ない</div>';
+}
+home();
+</script>
+</body>
+</html>
